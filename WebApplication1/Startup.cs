@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore;
 using Swashbuckle.AspNetCore.Swagger;
+using WebApplication1.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication1
 {
@@ -32,10 +34,14 @@ namespace WebApplication1
             // Add framework services.
             services.AddMvc();
 
+            var connection = Configuration["ConnectionStrings:EmotionDB"];
+
+            services.AddDbContext<EmotionContext>(options => options.UseSqlServer(connection));
+
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v2", new Info { Title = "My API", Version = "v2" });
             });
         }
 
@@ -50,7 +56,7 @@ namespace WebApplication1
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "My API V2");
             });
         }
     }
